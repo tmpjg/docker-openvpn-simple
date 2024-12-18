@@ -1,0 +1,27 @@
+#!/bin/bash 
+
+# USAGE: CLIENTNAME="user1" ./openvpn_client_add nopass
+
+if [ ! -d $EASYRSA_PKI ]
+then
+    echo "ERROR: no certs installed"
+    exit 1
+fi
+
+if [ -z "$CLIENTNAME" ]; then
+  echo "ERROR: no clientname!."
+  exit 1
+fi
+
+# create cert
+
+/usr/share/easy-rsa/easyrsa --batch build-client-full $CLIENTNAME $1
+
+export CN_KEY=$(cat $EASYRSA_PKI/private/$CLIENTNAME.key)
+export CN_CRT=$(openssl x509 -in $EASYRSA_PKI/issued/$CLIENTNAME.crt)
+export CA=$(cat $EASYRSA_PKI/ca.crt)
+export TA=$(cat $EASYRSA_PKI/ta.key)
+
+cd $OPENVPN_CLIENTS_DIR 
+
+cat $OPENVPN_TEMPLATES/openvpn-client.ovpn.tpl | envsubst > $OPENVPN_CLIENTS_DIR/$CLIENTNAME.ovpn

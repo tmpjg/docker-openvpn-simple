@@ -1,0 +1,27 @@
+#!/bin/bash 
+
+if [ ! -d $EASYRSA_PKI ]
+then
+    echo "ERROR: Certs not installed! "
+    exit 1
+fi
+
+if [ ! -f $OPENVPN_SERVER_CONF ]
+then
+    echo "ERROR: Openvpn no configurated!"
+    exit 1
+fi
+
+
+echo "Creating /dev/net/tun"
+mkdir -p /dev/net
+if [ ! -c /dev/net/tun ]; then
+    mknod /dev/net/tun c 10 200
+fi
+
+
+# iptables 
+source /scripts/openvpn_iptables.sh
+
+echo "Running openvpn"
+exec openvpn --config $OPENVPN_SERVER_CONF --client-config-dir $OPENVPN_CLIENT_CONF_DIR --crl-verify $EASYRSA_PKI/crl.pem 

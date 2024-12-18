@@ -1,0 +1,5 @@
+#!/bin/bash
+
+/scripts/easy-rsa_conf.sh
+
+/scripts/openvpn_conf.sh
