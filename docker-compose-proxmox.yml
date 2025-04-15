@@ -4,9 +4,9 @@ services:
     container_name: openvpn-simple
     network_mode: host
     environment:
-      - OPENVPN_CN=openvpn-simple
-      - OPENVPN_REMOTE=3.4.5.6
-      - OPENVPN_REMOTE_PORT=1194
+      - OPENVPN_CN=${OPENVPN_CN}
+      - OPENVPN_REMOTE=${OPENVPN_REMOTE}
+      - OPENVPN_REMOTE_PORT=${OPENVPN_REMOTE_PORT}
 #    ports: # not needed with network_mode hosts
 #      - "1194:1194/udp"
     cap_add:
